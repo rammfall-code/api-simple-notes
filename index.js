@@ -3,6 +3,7 @@ import fastifyCors from '@fastify/cors';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import { Type } from '@sinclair/typebox';
+import fastifyMultipart from '@fastify/multipart';
 
 const server = fastify({
   logger: true,
@@ -11,6 +12,9 @@ const server = fastify({
 server.register(fastifyCors);
 server.register(fastifySwagger);
 server.register(fastifySwaggerUi);
+server.register(fastifyMultipart, {
+  attachFieldsToBody: 'keyValues',
+});
 
 /**
  * @type {*[]}
@@ -91,6 +95,10 @@ server.register(
       },
     );
 
+    instance.get('/plain', (request, reply) => {
+      reply.send('hi all');
+    });
+
     instance.post(
       '/notes',
       {
@@ -115,7 +123,7 @@ server.register(
     );
 
     instance.patch(
-      '/users/:id',
+      '/notes/:id',
       {
         schema: {
           tags: ['Notes'],
@@ -145,7 +153,7 @@ server.register(
     );
 
     instance.delete(
-      '/users/:id',
+      '/notes/:id',
       {
         schema: {
           tags: ['Notes'],
@@ -166,7 +174,7 @@ server.register(
           });
         }
 
-        notes = notes.filter((item) => item.id === id);
+        notes = notes.filter((item) => item.id !== id);
 
         return note;
       },
