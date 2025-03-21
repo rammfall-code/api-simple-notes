@@ -4,6 +4,7 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import { Type } from '@sinclair/typebox';
 import fastifyMultipart from '@fastify/multipart';
+import { scoreModule } from './score/index.js';
 
 const server = fastify({
   logger: true,
@@ -71,6 +72,10 @@ server.addSchema(deletePayload);
 
 server.register(
   (instance, opts, done) => {
+    instance.register(scoreModule, {
+      prefix: '/score',
+    });
+
     instance.get(
       '/notes',
       {
@@ -94,10 +99,6 @@ server.register(
         );
       },
     );
-
-    instance.get('/plain', (request, reply) => {
-      reply.send('hi all');
-    });
 
     instance.post(
       '/notes',
