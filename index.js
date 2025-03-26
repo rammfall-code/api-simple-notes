@@ -10,7 +10,9 @@ const server = fastify({
   logger: true,
 }).withTypeProvider();
 
-server.register(fastifyCors);
+server.register(fastifyCors, {
+  methods: ['POST', 'GET', 'PUT', 'PATCH', 'DELETE'],
+});
 server.register(fastifySwagger);
 server.register(fastifySwaggerUi);
 server.register(fastifyMultipart, {
